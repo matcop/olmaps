@@ -2,119 +2,53 @@
 window.onload = init;
 
 function init() {
-    //Controls
-    const overViewMapControl = new ol.control.OverviewMap({
-        layers: [
-            new ol.layer.Tile({
-                source: new ol.source.OSM()
-            })
-        ]
-    });
-    const mousePositionControl = new ol.control.MousePosition();
-    const fullScreenControl = new ol.control.FullScreen();
     const map = new ol.Map({
         view: new ol.View({
-            center: [-7587843.049117488, -1863168.094706761],
-
-            zoom: 16,
-            //maxZoom: 6,
-            //minZoom: 2,
-            rotation: 0
-
-
+            center: [-7116569.555390783, -1930303.4143617074],
+            zoom: 5,//19,
         }),
         layers: [
             new ol.layer.Tile({
-                source: new ol.source.OSM()
+                source: new ol.source.OSM(),
+                zIndex: 1,
+                visible: true,
+                //  nota abour EXTENT              The bounding extent for layer rendering. The layer will not be rendered outside of this extent.
+                //ESPAÑOL
+                //La extensión delimitadora para el renderizado de capas. La capa no se renderizará fuera de esta extensión.
+
+                extent: [-7893011.389734798,-2750862.8075842257, -6300063.720271725, -971408.7891053226]
+
             })
         ],
         target: 'js-map',
-        keyboardEventTarget: document,
-
-        controls: ol.control.defaults().extend([
-            fullScreenControl,
-            mousePositionControl,
-            overViewMapControl
-
-        ])
-
-
-
     })
 
-    //mostrar por consola los controles por defecto dentro de un array
-    //console.log(ol.control.defaults())
+    //layer group
 
+    const layerGroup = new ol.layer.Group({
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM({
+                    //url:'https://{a-c}.tile.openstreeatmap.fr/hot/{z}/{x}/{y}.png',
+                   url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    //url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' //
+                }),
+                zIndex: 0,
+                visible: true,
 
+                extent: [-7893011.389734798,-2750862.8075842257, -6300063.720271725, -971408.7891053226]
 
-    //muestra las coordenadas en la consola
-    map.on('click', function (e) {
+                //opacity: 0.3
+            })
+        ]
+    })
+    map.addLayer(layerGroup);
+    //layer group
+
+    //get coordinate
+    map.on ('click',function(e){
         console.log(e.coordinate);
     })
-
-    const popupContainerElement = document.getElementById('popup-coordinates');
-    const popup = new ol.Overlay({
-        element: popupContainerElement,
-        OverlayPositioning: 'top-right',
-
-    })
-    map.addOverlay(popup);
-
-    map.on('click', function (e) {
-        console.log(e.coordinate);
-        const clickedCoordinate = e.coordinate; //guardamos en la constante el valor obtnido
-        //popup.setPosition(undefined);
-        popup.setPosition(clickedCoordinate);
-
-        //then i need to change the content of paragraf
-        popupContainerElement.innerHTML = clickedCoordinate;
-
-    });
-
-
-    //INTERACIONES
-    //NO NECESITAN DE BOTONES SOLO INTERACIONES BASICAS CON EL USO DE MOUSE
-    //TECLADO 
-    //DragRotate Interaction
-    const dragRotateInteraction = new ol.interaction.DragRotate({
-        condition: ol.events.condition.altKeyOnly
-    });
-
-    map.addInteraction(dragRotateInteraction);
-
-    //draw Interaction dibujo recto y libre.
-    const drawInteraction = new ol.interaction.Draw({
-        type: 'Polygon',
-        // freehand:false,
-    });
-    map.addInteraction(drawInteraction);
-
-    //Eventos al finalizar dibujo
-
-    // drawInteraction.on('drawend',function(e){
-    //     console.log('el dibujo a terminado');
-    // })
-
-
-    //evento al empezar el dibujo
-    //drawInteraction.on('drawstart',function(e){
-    drawInteraction.on('drawend', function (e) {
-
-        //console.log('el dibujo a empezo');
-        let parser = new ol.format.GeoJSON();
-        // let drawFeatures = parser.writeFeaturesObject([e.feature]);
-        // console.log(drawFeatures.features[0].geometry.coordinates[0]);
-
-        //abajo muestra la opcion para ver en formato GEOjson
-        let drawFeatures = parser.writeFeatures([e.feature]);
-        console.log(drawFeatures);
-    })
-
-    //CONTROLES
-    //aqui si se usa controles botones 
-
-
-
 
 }
 
