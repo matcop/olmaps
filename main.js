@@ -11,12 +11,12 @@ function init() {
             new ol.layer.Tile({
                 source: new ol.source.OSM(),
                 zIndex: 1,
-                visible: true,
+                visible: false,
                 //  nota abour EXTENT              The bounding extent for layer rendering. The layer will not be rendered outside of this extent.
                 //ESPAÑOL
                 //La extensión delimitadora para el renderizado de capas. La capa no se renderizará fuera de esta extensión.
 
-                extent: [-7893011.389734798,-2750862.8075842257, -6300063.720271725, -971408.7891053226]
+                //extent: [-7893011.389734798,-2750862.8075842257, -6300063.720271725, -971408.7891053226]
 
             })
         ],
@@ -34,16 +34,38 @@ function init() {
                     //url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' //
                 }),
                 zIndex: 0,
-                visible: true,
+                visible: false,
 
-                extent: [-7893011.389734798,-2750862.8075842257, -6300063.720271725, -971408.7891053226]
+                //extent: [-7893011.389734798,-2750862.8075842257, -6300063.720271725, -971408.7891053226]
 
                 //opacity: 0.3
-            })
+            }),
+            //Bing Maps BaseMap Layer
+            //no tengo cuenta de bing no pude crear llave
+           /*  new ol.layer.Tile({
+                source:new ol.source.BingMaps({
+
+                })
+            }) */
+            //Bing Maps BaseMap Layer
+
+            //CartoDB baseLayer
+           
+           
         ]
     })
     map.addLayer(layerGroup);
     //layer group
+
+    const cartoDBaseLayer=new ol.layer.Tile({
+        source:new ol.source.XYZ({
+            url:'https://{1-4}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{scale}.png'
+        }),
+        visible:true
+    })
+    map.addLayer(cartoDBaseLayer);
+
+
 
     //get coordinate
     map.on ('click',function(e){
