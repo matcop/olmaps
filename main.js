@@ -30,7 +30,7 @@ function init() {
             new ol.layer.Tile({
                 source: new ol.source.OSM({
                     //url:'https://{a-c}.tile.openstreeatmap.fr/hot/{z}/{x}/{y}.png',
-                   url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                     //url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' //
                 }),
                 zIndex: 0,
@@ -42,33 +42,95 @@ function init() {
             }),
             //Bing Maps BaseMap Layer
             //no tengo cuenta de bing no pude crear llave
-           /*  new ol.layer.Tile({
-                source:new ol.source.BingMaps({
-
-                })
-            }) */
+            /*  new ol.layer.Tile({
+                 source:new ol.source.BingMaps({
+ 
+                 })
+             }) */
             //Bing Maps BaseMap Layer
 
             //CartoDB baseLayer
-           
-           
+
+
         ]
     })
     map.addLayer(layerGroup);
-    //layer group
+    //layer group para  CartoDB
 
-    const cartoDBaseLayer=new ol.layer.Tile({
-        source:new ol.source.XYZ({
-            url:'https://{1-4}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{scale}.png'
+    const cartoDBaseLayer = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            url: 'https://{1-4}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{scale}.png'
+
+
+        }),
+        visible: false
+    })
+    map.addLayer(cartoDBaseLayer);
+    // tileDebug
+    const tileDebugLayer = new ol.layer.Tile({
+        source: new ol.source.TileDebug(),
+        visible: false
+    })
+
+    map.addLayer(tileDebugLayer);
+
+
+    // STAMEN Other provider base map layer
+
+    const stamenBaseLayer = new ol.layer.Tile({
+        source: new ol.source.Stamen({
+            layer: 'terrain-labels'
+        }),
+        visisble: false
+    })
+    map.addLayer(stamenBaseLayer);
+
+
+    const stamenBaseMapLayer = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            url: 'https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png',
+
+        }),
+        visible: true,
+        opacity: 0.4
+    })
+    map.addLayer(stamenBaseMapLayer);
+
+
+    // tile ArcGIS REST API layer
+    const tileArcGISTLAYER = new ol.layer.Tile({
+        source: new ol.source.TileArcGISRest({
+            //    url:'http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Population_World/MapServer'
+            //url:'http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Louisville/LOJIC_PublicSafety_Louisville/MapServer'  
+            url: 'http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Louisville/LOJIC_PublicSafety_Louisville/MapServer/2'
+        }),
+        visible: true
+    })
+
+    map.addLayer(tileArcGISTLAYER);
+
+    // NOAA WMS Layers
+
+    const NOAAWMSLayer = new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+            //url: 'https://nowcoast.noaa.gov/arcgis/services/nowcoast/analysis_meteohydro_sfc_qpe_time/MapServer/WMSServer?',
+            url: 'https://nowcoast.noaa.gov/arcgis/services/nowcoast/analysis_meteohydro_sfc_qpe_time/MapServer/WMSServer?',
+            params: {
+                LAYERS: 1,
+                //Boundary:19,
+                FORMAT: 'image/png',
+                TRANSPARENT: true
+            },
         }),
         visible:true
     })
-    map.addLayer(cartoDBaseLayer);
+    map.addLayer(NOAAWMSLayer);
 
 
 
-    //get coordinate
-    map.on ('click',function(e){
+
+    //get coordinate// para obtener las coordenadas
+    map.on('click', function (e) {
         console.log(e.coordinate);
     })
 
